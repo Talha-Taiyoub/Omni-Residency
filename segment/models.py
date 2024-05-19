@@ -1,4 +1,4 @@
-from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 # Create your models here.
@@ -7,6 +7,7 @@ from django.db import models
 
 class Destination(models.Model):
     title = models.CharField(max_length=255)
+    description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -14,7 +15,7 @@ class Destination(models.Model):
 class Branch(models.Model):
     name = models.CharField(max_length=255)
     nick_name = models.CharField(max_length=255, null=True, blank=True)
-    destination = models.ForeignKey("Destination", on_delete=models.PROTECT)
+    destination = models.ForeignKey(Destination, on_delete=models.PROTECT)
     branch_initial = models.CharField(
         max_length=7,
         validators=[
@@ -55,3 +56,27 @@ class Branch(models.Model):
 
     def __str__(self):
         return self.name
+
+
+ACTIVE = "A"
+OUT_OF_ORDER = "O"
+ROOM_STATUS = [(ACTIVE, "Active"), (OUT_OF_ORDER, "Out of order")]
+
+
+# Featured Image, gallery, amenities, panorama will be added later
+class RoomCategory(models.Model):
+    room_name = models.CharField(max_length=50)
+    status = models.CharField(max_length=1, choices=ROOM_STATUS, default=OUT_OF_ORDER)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    overview = models.TextField()
+    adults = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    children = models.PositiveSmallIntegerField()
+    regular_price = models.DecimalField(max_digits=9, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=9, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Room(models.Model):
+    room_number = models.CharField(max_length=5)
+    room_category = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
+    status = models.CharField(max_length=1, choices=ROOM_STATUS, default=OUT_OF_ORDER)
