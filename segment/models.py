@@ -1,5 +1,7 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 # source C:/Users/ASUS/.virtualenvs/Omni-Residency-N85yyym9/Scripts/activate
@@ -110,5 +112,16 @@ class Booking(models.Model):
         "Guest", on_delete=models.SET_NULL, null=True, blank=True
     )
     room_type = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
-    room_number = models.ForeignKey(Room, on_delete=models.PROTECT)
+    assigned_room = models.ForeignKey(Room, on_delete=models.PROTECT)
     status = models.CharField(max_length=2, choices=BOOKING_STATUS, default=PENDING)
+    check_in = models.DateField()
+    check_out = models.DateField()
+    adults = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    children = models.PositiveSmallIntegerField()
+
+    def clean(self):
+        super().clean()
+        if self.check_out <= self.check_in:
+            raise ValidationError(
+                {"check_out": _("Check-out date must be later than check-in date.")}
+            )
