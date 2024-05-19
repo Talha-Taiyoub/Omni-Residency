@@ -3,6 +3,8 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from community.models import Guest
+
 # Create your models here.
 # source C:/Users/ASUS/.virtualenvs/Omni-Residency-N85yyym9/Scripts/activate
 
@@ -109,7 +111,7 @@ class Booking(models.Model):
     )
 
     guest_id = models.ForeignKey(
-        "Guest", on_delete=models.SET_NULL, null=True, blank=True
+        Guest, on_delete=models.SET_NULL, null=True, blank=True
     )
     room_type = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
     assigned_room = models.ForeignKey(Room, on_delete=models.PROTECT)
@@ -125,3 +127,7 @@ class Booking(models.Model):
             raise ValidationError(
                 {"check_out": _("Check-out date must be later than check-in date.")}
             )
+
+
+class Billing(models.Model):
+    pass
