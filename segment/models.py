@@ -80,3 +80,35 @@ class Room(models.Model):
     room_number = models.CharField(max_length=5)
     room_category = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
     status = models.CharField(max_length=1, choices=ROOM_STATUS, default=OUT_OF_ORDER)
+
+
+PENDING = "PN"
+CONFIRMED = "CN"
+CHECKED_OUT = "CO"
+BOOKING_STATUS = [
+    (PENDING, "Pending"),
+    (CONFIRMED, "Confirmed"),
+    (CHECKED_OUT, "Checked_out"),
+]
+
+
+class Booking(models.Model):
+    full_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    mobile = models.CharField(
+        max_length=14,
+        validators=[
+            RegexValidator(
+                # ensures that the mobile number either starts with "+88" followed by "0" and then 10 digits or starts with "0" followed by 10 digits.
+                regex=r"^\+880?\d{10}$|^0\d{10}$",
+                message="Enter a valid Bangladeshi mobile number.",
+            )
+        ],
+    )
+
+    guest_id = models.ForeignKey(
+        "Guest", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    room_type = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
+    room_number = models.ForeignKey(Room, on_delete=models.PROTECT)
+    status = models.CharField(max_length=2, choices=BOOKING_STATUS, default=PENDING)
