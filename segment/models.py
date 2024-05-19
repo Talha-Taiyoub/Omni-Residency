@@ -1,3 +1,4 @@
+from django.core.validators import RegexValidator
 from django.db import models
 
 # Create your models here.
@@ -9,12 +10,7 @@ class Destination(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-from django.core.validators import RegexValidator
-
-# branch logo is an image and branch manager will be a user_id,later it will be added
-from django.db import models
-
-
+# branch logo is an image and branch manager will be a user_id,later both will be added
 class Branch(models.Model):
     name = models.CharField(max_length=255)
     nick_name = models.CharField(max_length=255, null=True, blank=True)
@@ -23,7 +19,7 @@ class Branch(models.Model):
         max_length=7,
         validators=[
             RegexValidator(
-                regex="^[A-Z0-9]{1,7}$",
+                regex=r"^[A-Z0-9]{1,7}$",
                 message="Initials must be 1-7 characters long and contain only uppercase letters and numbers.",
             )
         ],
@@ -36,7 +32,7 @@ class Branch(models.Model):
         validators=[
             RegexValidator(
                 # ensures that the phone number starts with either a plus sign or a digit, and the rest of the characters are digits
-                regex="^[+\d][\d]+$",
+                regex=r"^[+\d][\d]+$",
                 message="Enter a valid telephone number.",
             )
         ],
@@ -45,8 +41,8 @@ class Branch(models.Model):
         max_length=14,
         validators=[
             RegexValidator(
-                # ensures that the phone number either starts with "+88" followed by "0" and then 10 digits or starts with "0" followed by 10 digits.
-                regex="^\+880?\d{10}$|^0\d{10}$",
+                # ensures that the mobile number either starts with "+88" followed by "0" and then 10 digits or starts with "0" followed by 10 digits.
+                regex=r"^\+880?\d{10}$|^0\d{10}$",
                 message="Enter a valid Bangladeshi mobile number.",
             )
         ],
