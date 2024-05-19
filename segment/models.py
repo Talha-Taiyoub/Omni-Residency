@@ -120,6 +120,7 @@ class Booking(models.Model):
     check_out = models.DateField()
     adults = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     children = models.PositiveSmallIntegerField()
+    additional_info = models.TextField()
 
     def clean(self):
         super().clean()
@@ -129,5 +130,18 @@ class Booking(models.Model):
             )
 
 
+# we can easily find total,subtotal,due from these fields
 class Billing(models.Model):
-    pass
+    booking = models.OneToOneField(Booking, on_delete=models.PROTECT, primary_key=True)
+    item = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
+    description = models.TextField(null=True, blank=True)
+    price = models.DecimalField(
+        max_digits=9, decimal_places=2, validators=[MinValueValidator(1)]
+    )
+    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    discount = models.DecimalField(
+        max_digits=9, decimal_places=2, validators=[MinValueValidator(1)]
+    )
+    paid = models.DecimalField(
+        max_digits=9, decimal_places=2, validators=[MinValueValidator(1)]
+    )
