@@ -133,7 +133,6 @@ class Booking(models.Model):
 # we can easily find total,subtotal,due from these fields
 class Billing(models.Model):
     booking = models.OneToOneField(Booking, on_delete=models.PROTECT, primary_key=True)
-    item = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(
         max_digits=9, decimal_places=2, validators=[MinValueValidator(1)]
