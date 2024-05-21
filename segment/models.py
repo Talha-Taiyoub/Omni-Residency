@@ -15,12 +15,18 @@ class Destination(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+ACTIVE = "A"
+DRAFT = "D"
+COMING_SOON = "C"
+BRANCH_STATUS = [(ACTIVE, "A"), (DRAFT, "D"), (COMING_SOON, "C")]
+
+
 # branch logo is an image and branch manager will be a user_id,later both will be added
 class Branch(models.Model):
     name = models.CharField(max_length=255)
     nick_name = models.CharField(max_length=255, null=True, blank=True)
     destination = models.ForeignKey(Destination, on_delete=models.PROTECT)
-    branch_initial = models.CharField(
+    initial = models.CharField(
         max_length=7,
         validators=[
             RegexValidator(
@@ -29,7 +35,8 @@ class Branch(models.Model):
             )
         ],
     )
-    branch_address = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    status = models.CharField(max_length=1, choices=BRANCH_STATUS, default=COMING_SOON)
     overview = models.TextField()
     email = models.EmailField(unique=True)
     telephone = models.CharField(
@@ -113,7 +120,7 @@ class Booking(models.Model):
     guest_id = models.ForeignKey(
         Guest, on_delete=models.SET_NULL, null=True, blank=True
     )
-    room_type = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
+    room_category = models.ForeignKey(RoomCategory, on_delete=models.PROTECT)
     assigned_room = models.ForeignKey(Room, on_delete=models.PROTECT)
     status = models.CharField(max_length=2, choices=BOOKING_STATUS, default=PENDING)
     check_in = models.DateField()
