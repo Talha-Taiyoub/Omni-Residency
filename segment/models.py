@@ -18,7 +18,7 @@ class Destination(models.Model):
 ACTIVE = "A"
 DRAFT = "D"
 COMING_SOON = "C"
-BRANCH_STATUS = [(ACTIVE, "A"), (DRAFT, "D"), (COMING_SOON, "C")]
+BRANCH_STATUS = [(ACTIVE, "Active"), (DRAFT, "Draft"), (COMING_SOON, "Coming Soon")]
 
 
 # branch logo is an image and branch manager will be a user_id,later both will be added
