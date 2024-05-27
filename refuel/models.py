@@ -119,6 +119,7 @@ GYM_MEMBERSHIP_CHOICES = [
 
 class Membership(models.Model):
     guest = models.ForeignKey(Guest, on_delete=models.PROTECT)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     mobile = models.CharField(
         max_length=14,
