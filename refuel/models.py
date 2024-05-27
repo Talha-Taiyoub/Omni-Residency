@@ -89,6 +89,7 @@ class Gym(models.Model):
     gender_allowance = models.CharField(
         max_length=1, choices=GENDER_CHOICES, default=MALE
     )
+    area = models.PositiveSmallIntegerField(default=0)
     fees = models.DecimalField(max_digits=9, decimal_places=2)
     opening = models.TimeField()
     closing = models.TimeField()
