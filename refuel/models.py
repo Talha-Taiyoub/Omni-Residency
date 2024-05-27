@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
+from community.models import Guest
 from segment.models import Branch
 
 # Create your models here.
@@ -106,5 +107,31 @@ class GymGender(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+PENDING = "P"
+APPROVED = "A"
+DECLINED = "D"
+GYM_MEMBERSHIP_CHOICES = [
+    (PENDING, "Pending"),
+    (APPROVED, "Approved"),
+    (DECLINED, "Declined"),
+]
+
+
 class Membership(models.Model):
-    pass
+    guest = models.ForeignKey(Guest, on_delete=models.PROTECT)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    mobile = models.CharField(
+        max_length=14,
+        validators=[
+            RegexValidator(
+                # ensures that the mobile number either starts with "+88" followed by "0" and then 10 digits or starts with "0" followed by 10 digits.
+                regex=r"^\+880?\d{10}$|^0\d{10}$",
+                message="Enter a valid Bangladeshi mobile number.",
+            )
+        ],
+    )
+    # Why am I keeping fees? Because the manager of the gym may provide discounts for some particular guests
+    fees = models.DecimalField(max_digits=9, decimal_places=2)
+    status = models.CharField(
+        max_length=1, choices=GYM_MEMBERSHIP_CHOICES, default=PENDING
+    )
