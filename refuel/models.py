@@ -29,6 +29,7 @@ class Restaurant(models.Model):
     lunch_closing = models.TimeField()
     dinner_opening = models.TimeField()
     dinner_closing = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 PENDING = "PEN"
@@ -68,3 +69,27 @@ class Reservation(models.Model):
     total_bill = models.DecimalField(
         max_digits=9, decimal_places=2, null=True, blank=True
     )
+
+
+ACTIVE = "A"
+OUT_OF_ORDER = "O"
+GYM_STATUS = [(ACTIVE, "Active"), (OUT_OF_ORDER, "Out of order")]
+
+MALE = "M"
+FEMALE = "F"
+GENDER_CHOICES = [(MALE, "Male"), (FEMALE, "Female")]
+
+
+# Featured image, gallery will be added later
+class Gym(models.Model):
+    name = models.CharField(max_length=255)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    status = models.CharField(max_length=1, choices=GYM_STATUS, default=ACTIVE)
+    overview = models.TextField()
+    gender_allowance = models.CharField(
+        max_length=1, choices=GENDER_CHOICES, default=MALE
+    )
+    fees = models.DecimalField(max_digits=9, decimal_places=2)
+    opening = models.TimeField()
+    closing = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
