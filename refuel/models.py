@@ -80,17 +80,31 @@ FEMALE = "F"
 GENDER_CHOICES = [(MALE, "Male"), (FEMALE, "Female")]
 
 
+class Gender(models.Model):
+    name = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 # Featured image, gallery will be added later
 class Gym(models.Model):
     name = models.CharField(max_length=255)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     status = models.CharField(max_length=1, choices=GYM_STATUS, default=ACTIVE)
     overview = models.TextField()
-    gender_allowance = models.CharField(
-        max_length=1, choices=GENDER_CHOICES, default=MALE
-    )
     area = models.PositiveSmallIntegerField(default=0)
     fees = models.DecimalField(max_digits=9, decimal_places=2)
     opening = models.TimeField()
     closing = models.TimeField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class GymGender(models.Model):
+    gender = models.ForeignKey(
+        Gender, on_delete=models.PROTECT, related_name="gender_allowance"
+    )
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Membership(models.Model):
+    pass
