@@ -135,3 +135,4 @@ class Membership(models.Model):
     status = models.CharField(
         max_length=1, choices=GYM_MEMBERSHIP_CHOICES, default=PENDING
     )
+    created_at = models.DateTimeField(auto_now_add=True)
